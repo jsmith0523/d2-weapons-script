@@ -201,9 +201,9 @@ try {
 		#ignore old version of items (duplicates) that can't be identified by season;
 		#  mostly event weapons have this issue because the watermark icon can only
 		#  be traced to the event and doesn't distinguish between seasons.
-		$temp =	@(3400256755, #Zephyr
-				2603335652, #Jurassic Green
-				2869466318) #BrayTech Werewolf
+		#$temp =	@(3400256755, #Zephyr
+		#		2603335652, #Jurassic Green
+		#		2869466318) #BrayTech Werewolf
 		if($weapon.hash -in $temp) { continue }
 		#conditionally ignore adept versions of weapons
 		if(-not $adept) {
@@ -285,6 +285,8 @@ try {
 			}
 		}
 		
+		Write-Debug ""
+		
 		try {
 			$a = $weapon.sockets.socketEntries[0]
 			$b = $plugSetLookup.($a.reusablePlugSetHash).reusablePlugItems[0]
@@ -301,9 +303,9 @@ try {
 			AmmoType =  $save["Ammo Type"]
 			Frame =  $save["Frame"]
 			
-			RPM = $save["Rounds Per Minute"]			# not bow, fusion, linear fusion
-			DrawTime = $save["Draw Time"]				# bow
-			ChargeTime = $save["Charge Time"]			# fusion, linear fusion;
+			BaseRPM = $save["Rounds Per Minute"]			# not bow, fusion, linear fusion
+			BaseDrawTime = $save["Draw Time"]				# bow
+			BaseChargeTime = $save["Charge Time"]			# fusion, linear fusion;
 														#   also sword but chargerate mirrors this
 														#   glaive uses this but not for dps
 			
@@ -313,23 +315,23 @@ try {
 			Source = $save["Source"]
 
 			Impact = $save["Impact"]					# not rl, gl
-			BlastRadius = $save["Blast Radius"]			# gl, rl
-			Velocity = $save["Velocity"]				# gl, rl
-			Accuracy = $save["Accuracy"]				# bow
-			ShieldDur = $save["Shield Duration"]		# glaive
+			BaseBlastRadius = $save["Blast Radius"]			# gl, rl
+			BaseVelocity = $save["Velocity"]				# gl, rl
+			BaseAccuracy = $save["Accuracy"]				# bow
+			BaseShieldDur = $save["Shield Duration"]		# glaive
 			
-			Range = $save["Range"]
-			Stability = $save["Stability"]
-			Handling = $save["Handling"]
-			Reload = $save["Reload Speed"]
-			RecoilDir = $save["Recoil Direction"]
-			AimAssist = $save["Aim Assistance"]
-			AirEffect = $save["Airborne Effectiveness"]
+			BaseSwingSpeed = $save["Swing Speed"]			# sword
+			BaseChargeRate = $save["Charge Rate"]			# sword
+			BaseGuardResist = $save["Guard Resistance"]		# sword
+			BaseGuardEndur = $save["Guard Endurance"]		# sword
 			
-			SwingSpeed = $save["Swing Speed"]			# sword
-			GuardResist = $save["Guard Resistance"]		# sword
-			GuardEffic = $save["Guard Efficiency"]		# sword
-			ChargeRate = $save["Charge Rate"]			# sword, bow??
+			BaseRange = $save["Range"]
+			BaseStability = $save["Stability"]
+			BaseHandling = $save["Handling"]
+			BaseReload = $save["Reload Speed"]
+			BaseRecoilDir = $save["Recoil Direction"]
+			BaseAimAssist = $save["Aim Assistance"]
+			BaseAirEffect = $save["Airborne Effectiveness"]
 			
 			Zoom = $save["Zoom"]						# not glaive, 0 on swords
 			
@@ -353,7 +355,7 @@ try {
 	
 	#WRITE TO FILE
 	Write-Host "Writing CSV file..."
-	$output | Select-Object -Property Name,WeaponType,DamageType,AmmoType,Frame,RPM,DrawTime,ChargeTime,Hash,Season,Event,Source,Impact,BlastRadius,Velocity,Accuracy,ShieldDur,Range,Stability,Handling,Reload,RecoilDir,AimAssist,AirEffect,SwingSpeed,GuardResist,GuardEffic,ChargeRate,Zoom,Magazine,Inventory,AmmoCap,IsCraftable,IsExotic | Export-Csv -Path ".\d2wpns.csv" -Delimiter ',' -NoTypeInformation
+	$output | Select-Object -Property Hash,Name,WeaponType,DamageType,AmmoType,Frame,Season,Event,Source,Impact,BaseRPM,BaseDrawTime,BaseChargeTime,BaseBlastRadius,BaseVelocity,BaseAccuracy,BaseShieldDur,BaseSwingSpeed,BaseGuardResist,BaseGuardEndur,BaseChargeRate,BaseRange,BaseStability,BaseHandling,BaseReload,BaseRecoilDir,BaseAimAssist,BaseAirEffect,BaseMagazine,Inventory,AmmoCap,Zoom,IsCraftable,IsExotic | Export-Csv -Path ".\d2wpns.csv" -Delimiter ',' -NoTypeInformation
 	Write-Host "Done"
 	#endregion || PARSE SECTION ||
 }
