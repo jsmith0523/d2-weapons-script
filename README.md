@@ -3,7 +3,7 @@
 
 **HOW TO USE**
 
-The output of the script is a csv file containing a list of destiny 2 weapons and some data. I use it to update my own weapon spreadsheets that calculate DPS and whatever else I want; the tab created from the csv contains data such as rpm, mag size, etc that can be referenced having to input it manually. The whole process only needs to be done once or twice a season when new weapons are released.
+The output of the script is a csv file containing a list of destiny 2 weapons and some data. I use it to update my own weapon spreadsheets that calculate DPS and whatever else I want; the tab created from the csv contains data such as rpm, mag size, etc. The whole process only needs to be done once or twice a season when new weapons are released.
 
 
 **REQUIREMENTS**
@@ -29,12 +29,12 @@ The script will pull the latest event and season conversion data from the DIM re
 
 There is a adept switch for those who also want to pull adept weapons info; this may not be necessary in most cases since the stats are the same as the regular weapon. To do this run "./get_wpns.ps1 -adept"
 
-There is a debug switch for those that want to modify the code and want to output some info to the command line. To do this run "./get_wpns.ps1 -debug". Note that this might not be too helpful unless you reduce the output to only one or a few weapons.
+There is a debug switch for those that want to modify the code and want to output some info to the command line. To do this run "./get_wpns.ps1 -debug". This might not be too helpful unless you reduce the output to only one or a few weapons.
 
 
 **IMPORT INTO SPREADSHEET**
 
-The CSV can be imported into any spreadsheet. There is also a spreadsheet available that will tell you which weapons have been sunset. Run the script before following these instructions. Steps for importing the csv are below:
+The CSV can be imported into any spreadsheet. There is also a spreadsheet available that will tell you which weapons have been sunset and serves as an example for how to use the csv. Run the script before following these instructions. Steps for importing the csv are below:
 
 1) Copy the spreadsheet from https://docs.google.com/spreadsheets/d/11IfAqcUUBIPySpLDAnYRWGKEC2RTtZE7oQfGtOc39iI/edit?usp=drive_link to your own drive
 2) Make sure you are on the script-import tab
@@ -42,7 +42,7 @@ The CSV can be imported into any spreadsheet. There is also a spreadsheet availa
 4) Select Upload, then drag or browse for 'd2wpns.csv'
 5) MAKE SURE you set the Import Location to 'Replace current sheet', then import the data
 
-NOTE: My shared google sheet currently contains info from weapons up to season 21, so to get the latest weapons you must run the script and import data for season 22 and later
+NOTE: My shared google sheet currently contains info from weapons up to season 23.
 
 
 **SUPPORT**
