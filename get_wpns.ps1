@@ -284,9 +284,8 @@ try {
 				$save.Add($statLookup.($stat.statHash).displayProperties.name,$stat.value)
 			}
 		}
-		
-		Write-Debug ""
-		
+				
+		# frame
 		try {
 			$a = $weapon.sockets.socketEntries[0]
 			$b = $plugSetLookup.($a.reusablePlugSetHash).reusablePlugItems[0]
@@ -294,6 +293,60 @@ try {
 			$save.Add("Frame",$c)
 		}
 		catch { $save.Add("Frame","") }
+		
+		# barrels / scopes
+		try {
+			$c = ""
+			$a = $weapon.sockets.socketEntries[1].randomizedPlugSetHash			
+			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
+				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
+				$c = $c + $b + ", "
+			}
+			$save.Add("Col1Perks",$c)
+			Write-Debug "col 1 perks = $($c)"
+		}
+		catch {}
+		
+		# mags
+		try {
+			$c = ""
+			$a = $weapon.sockets.socketEntries[2].randomizedPlugSetHash			
+			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
+				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
+				$c = $c + $b + ", "
+			}
+			$save.Add("Col2Perks",$c)
+			Write-Debug "col 2 perks = $($c)"
+		}
+		catch {}
+		
+		# col 3 perks
+		try {
+			$c = ""
+			$a = $weapon.sockets.socketEntries[3].randomizedPlugSetHash			
+			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
+				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
+				$c = $c + $b + ", "
+			}
+			$save.Add("Col3Perks",$c)
+			Write-Debug "col 3 perks = $($c)"
+		}
+		catch {}
+		
+		# col 4 perks
+		try {
+			$c = ""
+			$a = $weapon.sockets.socketEntries[4].randomizedPlugSetHash			
+			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
+				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
+				$c = $c + $b + ", "
+			}
+			$save.Add("Col4Perks",$c)
+			Write-Debug "col 4 perks = $($c)"
+		}
+		catch {}
+		
+		Write-Debug ""
 		
 		# save the weapon to output
 		$output += New-Object -Type PSObject -Property @{
@@ -333,29 +386,25 @@ try {
 			BaseAimAssist = $save["Aim Assistance"]
 			BaseAirEffect = $save["Airborne Effectiveness"]
 			
-			Zoom = $save["Zoom"]						# not glaive, 0 on swords
-			
-			Magazine = $save["Magazine"]				# not bows
+			BaseMagazine = $save["Magazine"]			# not bows
 			Inventory = $save["Inventory Size"]			# seems inconsistent
 			AmmoCap = $save["Ammo Capacity"]			# sword
+			
+			Zoom = $save["Zoom"]						# not glaive, 0 on swords
 			
 			IsCraftable = $save["IsCraftable"]
 			IsExotic = $save["IsExotic"]
 			
-			#FUTURE OUTPUTS?
-			# SetPerks ; determine if perks are set
-			# Scope ; determine if wpn has a scope (needed to calculate zoom)
-			# Sight ; determine if wpn has a sight (relevant to hand cannons and sidearms)
-			# Rangefinder ; determine if wpn has rangefinder perk (needed to calculate dist)
-			# Seraph ; determine if wpn has seraph rounds
-			# Ricochet ; determine if wpn has ricochet rounds
-			# Steady ; determine if wpn has steady rounds
+			Col1Perks = $save["Col1Perks"]
+			Col2Perks = $save["Col2Perks"]
+			Col3Perks = $save["Col3Perks"]
+			Col4Perks = $save["Col4Perks"]
 		}
 	}
 	
 	#WRITE TO FILE
 	Write-Host "Writing CSV file..."
-	$output | Select-Object -Property Hash,Name,WeaponType,DamageType,AmmoType,Frame,Season,Event,Source,Impact,BaseRPM,BaseDrawTime,BaseChargeTime,BaseBlastRadius,BaseVelocity,BaseAccuracy,BaseShieldDur,BaseSwingSpeed,BaseGuardResist,BaseGuardEndur,BaseChargeRate,BaseRange,BaseStability,BaseHandling,BaseReload,BaseRecoilDir,BaseAimAssist,BaseAirEffect,BaseMagazine,Inventory,AmmoCap,Zoom,IsCraftable,IsExotic | Export-Csv -Path ".\d2wpns.csv" -Delimiter ',' -NoTypeInformation
+	$output | Select-Object -Property Hash,Name,WeaponType,DamageType,AmmoType,Frame,Season,Event,Source,Impact,BaseRPM,BaseDrawTime,BaseChargeTime,BaseBlastRadius,BaseVelocity,BaseAccuracy,BaseShieldDur,BaseSwingSpeed,BaseGuardResist,BaseGuardEndur,BaseChargeRate,BaseRange,BaseStability,BaseHandling,BaseReload,BaseRecoilDir,BaseAimAssist,BaseAirEffect,BaseMagazine,Inventory,AmmoCap,Zoom,IsCraftable,IsExotic,Col1Perks,Col2Perks,Col3Perks,Col4Perks | Export-Csv -Path ".\d2wpns.csv" -Delimiter ',' -NoTypeInformation
 	Write-Host "Done"
 	#endregion || PARSE SECTION ||
 }
