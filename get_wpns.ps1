@@ -294,10 +294,40 @@ try {
 		}
 		catch { $save.Add("Frame","") }
 		
-		# barrels / scopes
+		# check for set perks
+		$hasSetPerks = ""
 		try {
+			$a = $weapon.sockets.socketEntries[1].reusablePlugSetHash # static rolls
+			$b = $weapon.sockets.socketEntries[1].randomizedPlugSetHash # random rolls
+			
+			if ($a -match '^[0-9]+$') {
+				$hasSetPerks = "TRUE"
+				Write-Debug "hasSetPerks = TRUE"
+			}
+			elseif ($b -match '^[0-9]+$') {
+				$hasSetPerks = "FALSE"
+				Write-Debug "hasSetPerks = FALSE"
+			}
+			else {
+				$hasSetPerks = ""
+				Write-Debug "hasSetPerks not found"
+			}
+			$save.Add("HasSetPerks",$hasSetPerks)
+		}
+		catch {}
+		
+		# barrels / scopes / sights
+		try {
+			$a = ""
+			if ($hasSetPerks -eq "TRUE") {
+				$a = $weapon.sockets.socketEntries[1].reusablePlugSetHash
+			}
+			elseif ($hasSetPerks -eq "FALSE") {
+				$a = $weapon.sockets.socketEntries[1].randomizedPlugSetHash
+			}
+			else {}
+			
 			$c = ""
-			$a = $weapon.sockets.socketEntries[1].randomizedPlugSetHash			
 			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
 				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
 				$c = $c + $b + ", "
@@ -309,8 +339,16 @@ try {
 		
 		# mags
 		try {
-			$c = ""
-			$a = $weapon.sockets.socketEntries[2].randomizedPlugSetHash			
+			$a = ""
+			if ($hasSetPerks -eq "TRUE") {
+				$a = $weapon.sockets.socketEntries[2].reusablePlugSetHash
+			}
+			elseif ($hasSetPerks -eq "FALSE") {
+				$a = $weapon.sockets.socketEntries[2].randomizedPlugSetHash
+			}
+			else {}
+			
+			$c = ""	
 			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
 				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
 				$c = $c + $b + ", "
@@ -322,8 +360,16 @@ try {
 		
 		# col 3 perks
 		try {
-			$c = ""
-			$a = $weapon.sockets.socketEntries[3].randomizedPlugSetHash			
+			$a = ""
+			if ($hasSetPerks -eq "TRUE") {
+				$a = $weapon.sockets.socketEntries[3].reusablePlugSetHash
+			}
+			elseif ($hasSetPerks -eq "FALSE") {
+				$a = $weapon.sockets.socketEntries[3].randomizedPlugSetHash
+			}
+			else {}
+			
+			$c = ""	
 			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
 				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
 				$c = $c + $b + ", "
@@ -335,8 +381,16 @@ try {
 		
 		# col 4 perks
 		try {
-			$c = ""
-			$a = $weapon.sockets.socketEntries[4].randomizedPlugSetHash			
+			$a = ""
+			if ($hasSetPerks -eq "TRUE") {
+				$a = $weapon.sockets.socketEntries[4].reusablePlugSetHash
+			}
+			elseif ($hasSetPerks -eq "FALSE") {
+				$a = $weapon.sockets.socketEntries[4].randomizedPlugSetHash
+			}
+			else {}
+			
+			$c = ""	
 			($plugSetLookup.($a).reusablePlugItems) | foreach-object {
 				$b = $inventoryItemLookup.($_.plugItemHash).displayProperties.name
 				$c = $c + $b + ", "
@@ -356,10 +410,10 @@ try {
 			AmmoType =  $save["Ammo Type"]
 			Frame =  $save["Frame"]
 			
-			BaseRPM = $save["Rounds Per Minute"]			# not bow, fusion, linear fusion
-			BaseDrawTime = $save["Draw Time"]				# bow
-			BaseChargeTime = $save["Charge Time"]			# fusion, linear fusion;
-														#   also sword but chargerate mirrors this
+			BaseRPM = $save["Rounds Per Minute"]		# most weapons
+			BaseDrawTime = $save["Draw Time"]			# bow
+			BaseChargeTime = $save["Charge Time"]		# fusion, linear fusion
+														#   sword mirrors chargerate
 														#   glaive uses this but not for dps
 			
 			Hash = $save["Hash"]
@@ -394,6 +448,7 @@ try {
 			
 			IsCraftable = $save["IsCraftable"]
 			IsExotic = $save["IsExotic"]
+			HasSetPerks = $save["HasSetPerks"]
 			
 			Col1Perks = $save["Col1Perks"]
 			Col2Perks = $save["Col2Perks"]
@@ -404,7 +459,7 @@ try {
 	
 	#WRITE TO FILE
 	Write-Host "Writing CSV file..."
-	$output | Select-Object -Property Hash,Name,WeaponType,DamageType,AmmoType,Frame,Season,Event,Source,Impact,BaseRPM,BaseDrawTime,BaseChargeTime,BaseBlastRadius,BaseVelocity,BaseAccuracy,BaseShieldDur,BaseSwingSpeed,BaseGuardResist,BaseGuardEndur,BaseChargeRate,BaseRange,BaseStability,BaseHandling,BaseReload,BaseRecoilDir,BaseAimAssist,BaseAirEffect,BaseMagazine,Inventory,AmmoCap,Zoom,IsCraftable,IsExotic,Col1Perks,Col2Perks,Col3Perks,Col4Perks | Export-Csv -Path ".\d2wpns.csv" -Delimiter ',' -NoTypeInformation
+	$output | Select-Object -Property Hash,Name,WeaponType,DamageType,AmmoType,Frame,Season,Event,Source,Impact,BaseRPM,BaseDrawTime,BaseChargeTime,BaseBlastRadius,BaseVelocity,BaseAccuracy,BaseShieldDur,BaseSwingSpeed,BaseGuardResist,BaseGuardEndur,BaseChargeRate,BaseRange,BaseStability,BaseHandling,BaseReload,BaseRecoilDir,BaseAimAssist,BaseAirEffect,BaseMagazine,Inventory,AmmoCap,Zoom,IsCraftable,IsExotic,HasSetPerks,Col1Perks,Col2Perks,Col3Perks,Col4Perks | Export-Csv -Path ".\d2wpns.csv" -Delimiter ',' -NoTypeInformation
 	Write-Host "Done"
 	#endregion || PARSE SECTION ||
 }
